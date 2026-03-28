@@ -1,10 +1,27 @@
-
 import { useState } from 'react'
 import './App.css'
-
+import {TodoProvider} from './contexts/TodoContext'
 function App() {
+
     const [todos,setTodos] =useState([]);
+    const addTodo = (todo) =>{
+      setTodos((prev) => [{id:Date.now(),...todo},...prev]) 
+    }
+    const updateTodo = (id,todo) => {
+        setTodos((prev) => prev.map((preveTodo) =>(
+          preveTodo.id === id ? todo : preveTodo
+        )))
+    }
+    const deleteTodo =(id) =>{
+      setTodos((prev) => prev.filter((each) => each.id !== id)) 
+    }
+    const toggleComplete =(id) =>{
+      setTodos((prev) => prev.map((preveTodo) => preveTodo.id === id ?
+      {...preveTodo,completed: !preveTodo.completed}
+      : preveTodo ))
+    }
   return (
+    <TodoProvider value={{todos,addTodo,updateTodo,deleteTodo,toggleComplete}}>
     <>
       <div className='bg-[#172842] min-h-screen py-8'>
         <div className='w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white'>
@@ -20,6 +37,7 @@ function App() {
 
       </div>
     </>
+    </TodoProvider>
   )
 }
 
